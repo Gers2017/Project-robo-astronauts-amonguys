@@ -4,30 +4,37 @@ using UnityEngine;
 
 public class CameraController : MonoBehaviour
 {
-    public Transform character_body;
-    float x_angle;
+    float x_rotation;
     Vector3 offset;
-    float damping = 1.5f;
-
+    [SerializeField] Transform target;
+    [SerializeField] float turn_speed = 10f;
+    [Range(0.1f, 1f)] public float sensitibity = 0.5f;
+    [SerializeField] Vector2 camera_offset;
     void Start()
     {
-        offset = character_body.position - transform.position;
-        x_angle = transform.eulerAngles.x;
         transform.SetParent(null);
+        x_rotation = transform.eulerAngles.x;
+        offset = target.position - transform.position;
     }
 
     void LateUpdate()
     {
+        Orbit();
+    }
 
-        float current_rotation = transform.eulerAngles.y;
-        float desired_rotation = character_body.eulerAngles.y;
-        float y_angle = Mathf.LerpAngle(current_rotation, desired_rotation, damping * Time.deltaTime);
+    void Orbit()
+    {
+        float mouse_x = Input.GetAxis("Mouse X") * sensitibity;
+        float angle = mouse_x * turn_speed;
+        target.Rotate(Vector3.up, angle);
 
-        //transform.Rotate(Vector3.up, y_angle);
-        Quaternion rotation = Quaternion.Euler(x_angle, y_angle, 0f);
+        //Y rotation of the target
+        float desired_rotation = target.eulerAngles.y;
+        //The desired_rotation for the camera
+        Quaternion rotation = Quaternion.Euler(x_rotation, desired_rotation, 0);
+        //position where the camera should be in base of the rotation
+        var rotation_position = rotation * offset;
+        transform.position = target.transform.position - rotation_position + (Vector3)camera_offset;
         transform.rotation = rotation;
-
-        transform.position = character_body.position - (rotation * offset);
-        transform.LookAt(character_body);
     }
 }
