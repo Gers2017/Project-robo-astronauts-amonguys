@@ -59,8 +59,8 @@ public class ObjectPooler : MonoBehaviour
         }
         else
         {
-            instace.SetActive(true);
             instace.transform.position = position ?? transform.position;
+            instace.SetActive(true);
         }
         
         return instace;
