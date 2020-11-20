@@ -6,8 +6,8 @@ using UnityEngine.Audio;
 
 public class SettingsMenu : MonoBehaviour
 {
-    const string volume_key = "volume";
-    const string mouse_key = "mouse";
+    public static string volume_key = "volume";
+    public static string mouse_key = "mouse";
 
     const float default_volume = -10f;
     const float default_mouse = 0.5f;
