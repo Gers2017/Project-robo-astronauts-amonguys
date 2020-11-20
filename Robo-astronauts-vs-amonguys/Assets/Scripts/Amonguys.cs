@@ -8,11 +8,13 @@ public class Amonguys : MonoBehaviour, IDamagable
     bool is_alive = true;
     int velocity, is_dead, attack;
     Transform target;
-    int start_health = 60;
-    int health = 60;
-    int damage_amount = 10;
-    float attack_distance = 2.5f;
-    float search_time = 1.25f;
+    [SerializeField] int start_health = 60;
+    int health;
+    public int Health { get => health; }
+    [SerializeField] int damage_amount = 10;
+    [SerializeField] float attack_distance = 2.5f;
+    float max_search_time = 0.75f;
+    float min_search_time = 0.25f;
 
     Collider amonguys_collider;
     NavMeshAgent agent;
@@ -22,9 +24,6 @@ public class Amonguys : MonoBehaviour, IDamagable
     [Header("Audio clips")]
     [SerializeField] AudioClip[] spawn_audios;
     [SerializeField] AudioClip faint_audio;
-
-    public int Max_health => start_health;
-    public int Health { get => health; set => health = value; }
 
     //Get gameObject components in Awake
     void Awake()
@@ -46,9 +45,9 @@ public class Amonguys : MonoBehaviour, IDamagable
         is_dead = Animator.StringToHash("is_dead");
         attack = Animator.StringToHash("attack");
 
-        InvokeRepeating("SearchTarget", 0f, search_time);
+        InvokeRepeating("SearchTarget", 0f, Random.Range(min_search_time, max_search_time));
 
-        target_layer = LayerMask.NameToLayer("Player");
+        target_layer = LayerMask.GetMask("Player");
 
         Revive();
     }
@@ -83,15 +82,15 @@ public class Amonguys : MonoBehaviour, IDamagable
 
     void ExecuteAttack()
     {
-        var position = transform.position + transform.forward * 1.5f + Vector3.up * 1f;
-        var size = Vector3.one * 1.5f;
+        var position = transform.position + transform.forward * 2f + Vector3.up * 1f;
+        var size = Vector3.one * attack_distance / 2;
         var colliders = Physics.OverlapBox(position, size, Quaternion.identity, target_layer);
         if(colliders == null) return;
 
         foreach (var collider in colliders)
         {
-            PlayerController player;
-            bool is_player = collider.TryGetComponent<PlayerController>(out player);
+            IDamagable player;
+            bool is_player = collider.TryGetComponent<IDamagable>(out player);
             if(is_player)
             {
                 player.TakeDamage(damage_amount);
@@ -100,21 +99,29 @@ public class Amonguys : MonoBehaviour, IDamagable
     }
 
     private void OnDrawGizmos() {
-        var position = transform.position + transform.forward * 1.5f + Vector3.up * 1f;
-        var size = Vector3.one * 1.5f;
+        var position = transform.position + transform.forward * 2f + Vector3.up * 1f;
+        var size = Vector3.one * attack_distance / 2;
         Gizmos.color = new Color(1,0,0,0.5f);;
         Gizmos.DrawCube(position,size);
     }
 
     public void Revive()
     {
+        SetAnimationOffset();
         animator.SetBool(is_dead, false);
         agent.isStopped = false;
         amonguys_collider.enabled = true;
         health = start_health;
         is_alive = true;
         //Play random spawn audio
+        audio_source.pitch = Random.Range(0.7f, 1f);
         audio_source.PlayOneShot(spawn_audios[Random.Range(0,spawn_audios.Length)]);
+    }
+
+    void SetAnimationOffset()
+    {
+        float m_speed = Random.Range(1.3f, 1.5f);
+        animator.SetFloat("m_speed", m_speed);
     }
 
     public void TakeDamage(int amount)
@@ -133,7 +140,7 @@ public class Amonguys : MonoBehaviour, IDamagable
             animator.SetBool(is_dead, true);
             float faint_time = animator.GetCurrentAnimatorClipInfo(0)[0].clip.length;
             audio_source.PlayOneShot(faint_audio);
-            StartCoroutine(OnAnimationEnd(faint_time));
+            StartCoroutine(OnAnimationEnd(faint_time + faint_audio.length / 2));
         }
     }
 
