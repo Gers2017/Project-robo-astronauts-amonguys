@@ -8,6 +8,10 @@ public class MainMenu : MonoBehaviour
 {
     const string Play_scene_name = "PlayScene";
     
+    private void Awake()
+    {
+        Cursor.visible = true;
+    }
     public void GotoPlayScene()
     {
         if(SceneManager.GetSceneByName(Play_scene_name) != null)

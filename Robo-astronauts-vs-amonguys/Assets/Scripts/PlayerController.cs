@@ -6,6 +6,7 @@ using CustomUI;
 public class PlayerController : MonoBehaviour, IDamagable
 {
     const int EYES_MATERIAL_INDEX = 2;
+    const float GRAVITY = -9.8f;
     CharacterController character;
     Animator animator;
     bool is_alive = true;
@@ -98,32 +99,42 @@ public class PlayerController : MonoBehaviour, IDamagable
 
     void Update()
     {
-        if(!is_alive) return;
-        
-        if(Input.GetButtonDown("Fire2"))
+        if (is_alive)
         {
-            camController.SetZoom(true);
-            camController.MaxAngleX = max_shoot_angle_x;
-            camController.MinAngleX = min_shoot_angle_x;
-            camController.TurnSpeed = shoot_turn_speed;
-            speed *= 0.5f;
-        }
-        else if(Input.GetButtonUp("Fire2"))
-        {
-            camController.SetZoom(false);
-            camController.MaxAngleX = max_move_angle_x;
-            camController.MinAngleX = min_move_angle_x;
-            camController.TurnSpeed = move_turn_speed;
-            speed *= 2f;
+            if (Input.GetButtonDown("Fire2"))
+            {
+                HandlePlayerMode(true);
+            }
+            else if (Input.GetButtonUp("Fire2"))
+            {
+                HandlePlayerMode(false);
+            }
+
+            Vector3 move_direction = GetInputDirection();
+
+            Move(move_direction);
+            HandleAttack();
         }
 
+        if(!character.isGrounded)
+            character.Move(Vector3.up * GRAVITY * Time.deltaTime);
+    }
+
+    private void HandlePlayerMode(bool isShootMode)
+    {
+        camController.SetZoom(isShootMode);
+        camController.MaxAngleX = isShootMode ? max_shoot_angle_x : max_move_angle_x;
+        camController.MinAngleX = isShootMode? min_shoot_angle_x : min_move_angle_x;
+        camController.TurnSpeed = isShootMode? shoot_turn_speed : move_turn_speed;
+        speed *= isShootMode ? 0.5f : 2f;
+    }
+
+    private static Vector3 GetInputDirection()
+    {
         float horizontal = Input.GetAxisRaw("Horizontal");
         float vertical = Input.GetAxisRaw("Vertical");
         Vector3 move_direction = new Vector3(horizontal, 0f, vertical).normalized;
-
-        Move(move_direction);
-        HandleAttack();
-       
+        return move_direction;
     }
 
     void SetHealth(int value)
