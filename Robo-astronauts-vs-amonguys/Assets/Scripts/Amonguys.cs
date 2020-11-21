@@ -25,12 +25,27 @@ public class Amonguys : MonoBehaviour, IDamagable
     [SerializeField] AudioClip[] spawn_audios;
     [SerializeField] AudioClip faint_audio;
 
+    [SerializeField] SkinnedMeshRenderer amonguy_renderer;
+    [SerializeField] Color[] amonguys_colors;
     //Get gameObject components in Awake
     void Awake()
     {
         agent = GetComponent<NavMeshAgent>();
         amonguys_collider = GetComponent<Collider>();
         audio_source = GetComponent<AudioSource>();
+    }
+    
+    void SetColor()
+    {
+        int index = Mathf.RoundToInt(Random.value * (amonguys_colors.Length - 1));
+        var color = amonguys_colors[index];
+        amonguy_renderer.materials[0].SetColor("_Color", color);
+    }
+
+    void SetAnimationOffset()
+    {
+        float m_speed = Random.Range(1.3f, 1.5f);
+        animator.SetFloat("m_speed", m_speed);
     }
     
     void Start()
@@ -50,6 +65,20 @@ public class Amonguys : MonoBehaviour, IDamagable
         target_layer = LayerMask.GetMask("Player");
 
         Revive();
+    }
+
+    public void Revive()
+    {
+        SetAnimationOffset();
+        SetColor();
+        animator.SetBool(is_dead, false);
+        agent.isStopped = false;
+        amonguys_collider.enabled = true;
+        health = start_health;
+        is_alive = true;
+        //Play random spawn audio
+        audio_source.pitch = Random.Range(0.7f, 1f);
+        audio_source.PlayOneShot(spawn_audios[Random.Range(0,spawn_audios.Length)]);
     }
     
     void LateUpdate()
@@ -103,25 +132,6 @@ public class Amonguys : MonoBehaviour, IDamagable
         var size = Vector3.one * attack_distance / 2;
         Gizmos.color = new Color(1,0,0,0.5f);;
         Gizmos.DrawCube(position,size);
-    }
-
-    public void Revive()
-    {
-        SetAnimationOffset();
-        animator.SetBool(is_dead, false);
-        agent.isStopped = false;
-        amonguys_collider.enabled = true;
-        health = start_health;
-        is_alive = true;
-        //Play random spawn audio
-        audio_source.pitch = Random.Range(0.7f, 1f);
-        audio_source.PlayOneShot(spawn_audios[Random.Range(0,spawn_audios.Length)]);
-    }
-
-    void SetAnimationOffset()
-    {
-        float m_speed = Random.Range(1.3f, 1.5f);
-        animator.SetFloat("m_speed", m_speed);
     }
 
     public void TakeDamage(int amount)

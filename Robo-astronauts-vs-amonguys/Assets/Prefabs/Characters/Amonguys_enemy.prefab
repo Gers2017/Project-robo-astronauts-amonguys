@@ -55,6 +55,12 @@ MonoBehaviour:
   - {fileID: 8300000, guid: e88ea5b30c33da34c963d462a4e68284, type: 3}
   - {fileID: 8300000, guid: 9763a7f05a59d39468a9f690592c4ce5, type: 3}
   faint_audio: {fileID: 8300000, guid: 16a34ef4993926943a5f1dd96f1e8f6a, type: 3}
+  amonguy_renderer: {fileID: 1986897433595432190}
+  amonguys_colors:
+  - {r: 0.8584906, g: 0.08503916, b: 0.13237044, a: 1}
+  - {r: 0.766, g: 0.09268599, b: 0.7523286, a: 1}
+  - {r: 0.213, g: 0.213, b: 0.213, a: 1}
+  - {r: 0.38649836, g: 0.05239799, b: 0.73800004, a: 1}
 --- !u!195 &7700553510366609303
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -76,7 +82,7 @@ NavMeshAgent:
   m_Height: 3.5
   m_BaseOffset: 0
   m_WalkableMask: 4294967295
-  m_ObstacleAvoidanceType: 2
+  m_ObstacleAvoidanceType: 1
 --- !u!65 &7700553510366609297
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -269,6 +275,16 @@ PrefabInstance:
       propertyPath: m_ApplyRootMotion
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 6541873750770618920, guid: c0b9b7114bae02347b200c4e636fcbc4,
+        type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 3729533790b48184b8e38cb808b6508a, type: 2}
+    - target: {fileID: 6541873750770618920, guid: c0b9b7114bae02347b200c4e636fcbc4,
+        type: 3}
+      propertyPath: m_Materials.Array.data[1]
+      value: 
+      objectReference: {fileID: 2100000, guid: 9afefe6f617e3144f8eb0a6e35bc1bc4, type: 2}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: c0b9b7114bae02347b200c4e636fcbc4, type: 3}
 --- !u!4 &5102928336846895421 stripped
@@ -280,6 +296,12 @@ Transform:
 --- !u!95 &1166734247029203783 stripped
 Animator:
   m_CorrespondingSourceObject: {fileID: 5866666021909216657, guid: c0b9b7114bae02347b200c4e636fcbc4,
+    type: 3}
+  m_PrefabInstance: {fileID: 4709506494074576598}
+  m_PrefabAsset: {fileID: 0}
+--- !u!137 &1986897433595432190 stripped
+SkinnedMeshRenderer:
+  m_CorrespondingSourceObject: {fileID: 6541873750770618920, guid: c0b9b7114bae02347b200c4e636fcbc4,
     type: 3}
   m_PrefabInstance: {fileID: 4709506494074576598}
   m_PrefabAsset: {fileID: 0}
