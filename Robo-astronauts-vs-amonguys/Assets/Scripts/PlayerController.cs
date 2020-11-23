@@ -31,6 +31,7 @@ public class PlayerController : MonoBehaviour, IDamagable
     int health;
     public int Health { get => health; set => SetHealth(value); }
     public event Action<float> OnHpPercentage;
+    public static event Action<PlayerController> OnPlayerDie;
     float time_hit_again = 0;
     float hit_time_offset = 1.5f;
     public bool is_damaged  => Time.time < time_hit_again;
@@ -204,7 +205,7 @@ public class PlayerController : MonoBehaviour, IDamagable
         if (Health <= 0)
         {
             is_alive = false;
-            Debug.Log("Player Dead");
+            OnPlayerDie.Invoke(this);
         }
 
         animator.SetTrigger(damage_hash);
