@@ -22,6 +22,7 @@ public class PlayerController : MonoBehaviour, IDamagable
     public int health;
     public int Health { get => health; set => SetHealth(value); }
     public event Action<float> OnHpPercentage;
+    public static event Action<PlayerController> OnPlayerDie;
     float time_hit_again = 0;
     float hit_time_offset = 1.5f;
     public bool is_damaged  => Time.time < time_hit_again;
@@ -65,7 +66,8 @@ public class PlayerController : MonoBehaviour, IDamagable
     [SerializeField] Material normal_mat, danger_mat;
     [SerializeField] Color normal_light_color = Color.green, danger_light_color = Color.red;
 
-    void OnApplicationFocus(bool focusStatus) {
+    void OnApplicationFocus(bool focusStatus)
+    {
         if(focusStatus)
         {
             Cursor.visible = false;
@@ -182,7 +184,7 @@ public class PlayerController : MonoBehaviour, IDamagable
         if(Health <= 0)
         {
             is_alive = false;
-            Debug.Log("Player Dead");
+            OnPlayerDie.Invoke(this);
         }
         
         animator.SetTrigger(damage_hash);
