@@ -1,4 +1,5 @@
-﻿using System;
+﻿
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -15,7 +16,7 @@ public class Collectable : MonoBehaviour
             audioSource.Play();
             GetComponent<BoxCollider>().enabled = false;
             transform.GetChild(0).gameObject.SetActive(false);
-            Invoke("Disable", 0.5f);
+            Invoke("Disable", 0.3f);
         }
     }
 
