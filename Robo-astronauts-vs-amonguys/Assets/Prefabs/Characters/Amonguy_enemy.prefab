@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 7700553510366609297}
   - component: {fileID: 5917151081396605947}
   m_Layer: 10
-  m_Name: Amonguys_enemy
+  m_Name: Amonguy_enemy
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -47,20 +47,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5278b7f348e450e478dace6453009f75, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  start_health: 80
-  damage_amount: 10
-  attack_distance: 3
+  amonguys_stats:
+  - {fileID: 11400000, guid: bade24adcf3ed1b43b4428f2bfe4beaf, type: 2}
+  - {fileID: 11400000, guid: eb909f4b7f6103f4aa0696aa1e7ca26b, type: 2}
+  - {fileID: 11400000, guid: 1b57bd7edcdd3344291566bca722f589, type: 2}
   animator: {fileID: 1166734247029203783}
   spawn_audios:
   - {fileID: 8300000, guid: e88ea5b30c33da34c963d462a4e68284, type: 3}
   - {fileID: 8300000, guid: 9763a7f05a59d39468a9f690592c4ce5, type: 3}
   faint_audio: {fileID: 8300000, guid: 16a34ef4993926943a5f1dd96f1e8f6a, type: 3}
   amonguy_renderer: {fileID: 1986897433595432190}
-  amonguys_colors:
-  - {r: 0.8584906, g: 0.08503916, b: 0.13237044, a: 1}
-  - {r: 0.766, g: 0.09268599, b: 0.7523286, a: 1}
-  - {r: 0.213, g: 0.213, b: 0.213, a: 1}
-  - {r: 0.38649836, g: 0.05239799, b: 0.73800004, a: 1}
 --- !u!195 &7700553510366609303
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -71,7 +67,7 @@ NavMeshAgent:
   m_Enabled: 1
   m_AgentTypeID: 0
   m_Radius: 1
-  m_Speed: 4.5
+  m_Speed: 4
   m_Acceleration: 12
   avoidancePriority: 10
   m_AngularSpeed: 180
@@ -82,7 +78,7 @@ NavMeshAgent:
   m_Height: 3.5
   m_BaseOffset: 0
   m_WalkableMask: 4294967295
-  m_ObstacleAvoidanceType: 1
+  m_ObstacleAvoidanceType: 2
 --- !u!65 &7700553510366609297
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -94,7 +90,7 @@ BoxCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 2.3, y: 2, z: 1.5}
+  m_Size: {x: 2.4, y: 3, z: 1.5}
   m_Center: {x: 0, y: 1.5, z: 0}
 --- !u!82 &5917151081396605947
 AudioSource:
