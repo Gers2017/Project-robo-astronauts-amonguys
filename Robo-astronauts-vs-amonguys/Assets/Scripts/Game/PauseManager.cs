@@ -2,27 +2,36 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
-public class PauseManager : MonoBehaviour
+namespace GameManagement
 {
-    public bool isPaused;
-    [SerializeField] GameObject pauseMenu;
-    public static Action<bool> OnPause;
 
-    private void LateUpdate()
+    public class PauseManager : MonoBehaviour
     {
-        if(Input.GetButtonDown("Pause"))
+        public bool isPaused;
+        public static Action<bool> OnGamePause;
+        public UnityEvent OnPauseEvent;
+        public UnityEvent OnUnPauseEvent;
+
+        private void LateUpdate()
         {
-            Pause();
+            if(Input.GetButtonDown("Pause"))
+            {
+                Pause();
+            }
         }
-    }
 
-    public void Pause()
-    {
-        isPaused = !isPaused;
-        pauseMenu.SetActive(isPaused);
-        OnPause?.Invoke(isPaused);
-        Time.timeScale = isPaused ? 0f : 1f;
-    }
+        public void Pause()
+        {
+            isPaused = !isPaused;
+            Time.timeScale = isPaused ? 0f : 1f;
+            OnGamePause?.Invoke(isPaused);
+            if(isPaused)
+                OnPauseEvent.Invoke();
+            else
+                OnUnPauseEvent.Invoke();
+        }
 
+    }
 }

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.Audio;
+using GameManagement;
 
 namespace CustomUI
 {
@@ -12,14 +13,13 @@ namespace CustomUI
         [SerializeField] Slider volume_slider;
         [SerializeField] Slider mouse_slider;
 
-        void Awake()
+
+        void OnEnable()
         {
             float volume = GameSettings.GetMasterVolume();
             SetAudioMixerVolume(volume);
             volume_slider.value = volume;
             mouse_slider.value = GameSettings.GetMouseSensitivity();
-            GetComponent<RectTransform>().position = Vector3.zero;
-            gameObject.SetActive(false);
         }
 
         public void OnVolumeChange(float value)

@@ -35,6 +35,7 @@ namespace AwesomeCamera
             get => maxAngleX; 
             set {  maxAngleX = maxAngleX >= minAngleX ? value : minAngleX ;}
         }
+
         [SerializeField] float radius = 7.5f;
         public float Radius
         {

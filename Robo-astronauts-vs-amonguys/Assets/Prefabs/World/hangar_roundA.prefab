@@ -11,13 +11,13 @@ GameObject:
   - component: {fileID: 942927314648270382}
   - component: {fileID: 4231739814624397707}
   - component: {fileID: 2116374861554154817}
-  - component: {fileID: 7080946781816547762}
+  - component: {fileID: 4642119189459840501}
   m_Layer: 15
   m_Name: hangar_roundA
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 4294967295
   m_IsActive: 1
 --- !u!4 &942927314648270382
 Transform:
@@ -83,8 +83,8 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
---- !u!65 &7080946781816547762
-BoxCollider:
+--- !u!64 &4642119189459840501
+MeshCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -93,6 +93,7 @@ BoxCollider:
   m_Material: {fileID: 0}
   m_IsTrigger: 0
   m_Enabled: 1
-  serializedVersion: 2
-  m_Size: {x: 3, y: 1.4999999, z: 2.5}
-  m_Center: {x: 0, y: 0.759, z: 0}
+  serializedVersion: 4
+  m_Convex: 1
+  m_CookingOptions: -1
+  m_Mesh: {fileID: -8791073520741783645, guid: b7b9af92d74417a4fb09073bc1141e4b, type: 3}

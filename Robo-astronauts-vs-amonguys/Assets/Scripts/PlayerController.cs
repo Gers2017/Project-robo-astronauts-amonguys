@@ -5,6 +5,8 @@ using UnityEngine;
 using ObjectPooling;
 using CustomUI;
 using Cinemachine;
+using GameManagement;
+
 public class PlayerController : MonoBehaviour, IDamagable
 {
     const int EYES_MATERIAL_INDEX = 2;
@@ -15,39 +17,39 @@ public class PlayerController : MonoBehaviour, IDamagable
     bool is_alive = true;
 
     [Header("Movement")]
-    [SerializeField] float speed = 10f;
-    [SerializeField] float turn_speed = 120f;
-    float move_turn_speed = 120f;
-    float shoot_turn_speed = 100f;
-
-    float shoot_time;
-    public bool can_shoot => shoot_time < Time.time;
-    float mouse_sensitivity;
+    [SerializeField] float normal_speed = 12f;
+    [SerializeField] float shooting_speed = 6f;
+    float character_speed;
+    [SerializeField] float move_turn_speed = 120f;
+    [SerializeField] float shoot_turn_speed = 100f;
+    float turn_speed;
 
     [Header("Health")]
     [SerializeField] int max_health = 100;
     [SerializeField] SlideBar health_bar;
-
     int health;
     public int Health { get => health; set => SetHealth(value); }
     public event Action<float> OnHpPercentage;
     public static event Action<PlayerController> OnPlayerDie;
-    float time_hit_again = 0;
-    float hit_time_offset = 1.5f;
-    public bool is_damaged  => Time.time < time_hit_again;
+    float time_to_damage = 0;
+    float time_damage_again = 1.5f;
+    public bool is_damaged  => Time.time < time_to_damage;
 
     [Header("Shooting")]
+    [SerializeField] int damage_amount = 10;
+    [SerializeField] float shoot_distance = 100f;
+    [SerializeField] float time_shoot_again = 0.1f;
+    float shoot_time;
+    public bool can_shoot => shoot_time < Time.time;
+    [SerializeField] LayerMask target_layer;
+    [SerializeField] ParticleSystem flash_particles;
+    ObjectPooler hit_particles_pooler;
+    float mouse_sensitivity;
+
+    private Camera main_camera;
     [SerializeField] CinemachineVirtualCamera CM_movement;
     [SerializeField] CinemachineVirtualCamera CM_shooting;
     CinemachineImpulseSource impulse_source;
-    private Camera main_camera;
-    [SerializeField] int damage_amount = 10;
-    [SerializeField] float shoot_distance = 100f;
-    [SerializeField] float time_btw_shoot = 0.13f;
-    [SerializeField] LayerMask target_layer;
-    [SerializeField] ParticleSystem flash_particles;
-
-    ObjectPooler hit_particles_pooler;
 
     int velocity_hash, damage_hash;
 
@@ -65,15 +67,6 @@ public class PlayerController : MonoBehaviour, IDamagable
     [SerializeField] Material normal_mat, danger_mat;
     [SerializeField] Color normal_light_color = Color.green, danger_light_color = Color.red;
 
-    void OnApplicationFocus(bool focusStatus)
-    {
-        if(focusStatus)
-        {
-            //Lock to center
-            Cursor.lockState = CursorLockMode.Locked;
-        }
-    }
-
     void Awake()
     {
         character = GetComponent<CharacterController>();
@@ -84,10 +77,18 @@ public class PlayerController : MonoBehaviour, IDamagable
 
     void Start()
     {
+        SetUpSpeed();
         SetupAnimator();
         SetupHealth();
         GetMainCamera();
     }
+
+    private void SetUpSpeed()
+    {
+        character_speed = normal_speed;
+        turn_speed = move_turn_speed;
+    }
+
     void GetMainCamera()
     {
         main_camera = Camera.main;
@@ -112,26 +113,30 @@ public class PlayerController : MonoBehaviour, IDamagable
         {
             if (Input.GetButtonDown("Fire2"))
             {
-                HandlePlayerMode(true);
+                SetPlayerMode(true);
             }
             else if (Input.GetButtonUp("Fire2"))
             {
-                HandlePlayerMode(false);
+                SetPlayerMode(false);
             }
             
             Movement();
             HandleAttack();
+        }
+        else
+        {
+            DeactivatePlayer();
         }
 
         if(!character.isGrounded)
             character.Move(Vector3.up * GRAVITY * Time.deltaTime);
     }
 
-    private void HandlePlayerMode(bool is_shoot_mode)
+    private void SetPlayerMode(bool is_shoot_mode)
     {
         CM_movement.gameObject.SetActive(!is_shoot_mode);
         CM_shooting.gameObject.SetActive(is_shoot_mode);
-        speed *= is_shoot_mode ? 0.5f : 2f;
+        character_speed *= is_shoot_mode ? 0.5f : 2f;
         turn_speed = is_shoot_mode ? shoot_turn_speed : move_turn_speed;
     }
 
@@ -155,7 +160,7 @@ public class PlayerController : MonoBehaviour, IDamagable
         if(input.magnitude > 0)
         {
             var move_dir = transform.forward * input.z + transform.right * input.x;
-            character.Move(move_dir.normalized * Time.deltaTime * speed);
+            character.Move(move_dir.normalized * Time.deltaTime * character_speed);
         }
 
         animator.SetFloat(velocity_hash, input.magnitude);
@@ -172,19 +177,16 @@ public class PlayerController : MonoBehaviour, IDamagable
         if(is_damaged) return;
 
         if(Input.GetButtonDown("Fire1") && can_shoot)
-        {
-            //RaycastHit hit;
-            /*var ray = Physics.Raycast(shoot_point.position, shoot_point.forward, out hit, shoot_distance, target_layer);*/
-            
+        {           
             //Viewport goes from 0 to 1 on x and y
             //So Vector3.one * 0.5 is the center
             var cam_ray = main_camera.ViewportPointToRay(Vector3.one * 0.5f);
             RaycastHit hitInfo;
             if(Physics.Raycast(cam_ray, out hitInfo, 100, target_layer))
             {
-                Debug.DrawRay(cam_ray.origin, cam_ray.direction * shoot_distance, Color.cyan, 5f); 
+                //Debug.DrawRay(cam_ray.origin, cam_ray.direction * shoot_distance, Color.cyan, 5f); 
                 hit_particles_pooler.GetInstance(hitInfo.point);
-                shoot_time = Time.time + time_btw_shoot;
+                shoot_time = Time.time + time_shoot_again;
 
                 var amonguys = hitInfo.collider.transform.gameObject.GetComponent<IDamagable>();
                 amonguys?.TakeDamage(damage_amount);
@@ -202,18 +204,19 @@ public class PlayerController : MonoBehaviour, IDamagable
 
         Health -= amount;
 
-        if (Health <= 0)
-        {
-            is_alive = false;
-            OnPlayerDie.Invoke(this);
-        }
-
         animator.SetTrigger(damage_hash);
         audio_src_effects.PlayOneShot(damage_audio);
         GenerateImpulse();
-        StartCoroutine(ChangeToDamageMaterials(hit_time_offset + 0.5f));
+        StartCoroutine(ChangeToDamageMaterials(time_damage_again + 0.5f));
 
-        time_hit_again = Time.time + hit_time_offset;
+        time_to_damage = Time.time + time_damage_again;
+
+        if (Health <= 0)
+        {
+            start_rotation = transform.rotation;
+            is_alive = false;
+            OnPlayerDie.Invoke(this);
+        }
     }
 
     private void GenerateImpulse()
@@ -237,4 +240,10 @@ public class PlayerController : MonoBehaviour, IDamagable
         robi_light.color = normal_light_color;
     }
 
+    private Quaternion start_rotation;
+    private Quaternion new_rotation = Quaternion.Euler(90,0,-90);
+    void DeactivatePlayer()
+    {
+        transform.rotation = Quaternion.Slerp(start_rotation, new_rotation, Time.deltaTime * 7f);
+    }
 }
