@@ -9,16 +9,17 @@ namespace CustomUI
     public class MainMenu : MonoBehaviour
     {
         const string Play_scene_name = "PlayScene";
-        private void Start()
-        {
-            Cursor.lockState = CursorLockMode.None;
-        }
         public void GotoPlayScene()
         {
             if(SceneManager.GetSceneByName(Play_scene_name) != null)
             {
                 SceneManager.LoadScene(Play_scene_name);
             }
+        }
+
+        public void GotoMainMenu()
+        {
+            SceneManager.LoadScene("MainMenu");
         }
 
         public void ExitGame()

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using Cinemachine;
+using GameManagement;
 
 public class CameraHandler : MonoBehaviour
 {

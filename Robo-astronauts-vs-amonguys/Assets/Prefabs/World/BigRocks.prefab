@@ -9,7 +9,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3767301232194693045}
-  - component: {fileID: 6830098387019585517}
   m_Layer: 0
   m_Name: BigRocks
   m_TagString: Untagged
@@ -34,24 +33,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &6830098387019585517
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1062803152507410147}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 584e7187e33ddc24ea9535ced8966750, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  objects:
-  - {fileID: 6189263670208390322}
-  - {fileID: 7771808900654246183}
-  - {fileID: 7706750187219279837}
-  positionModifier: 0.2
-  scaleModifier: 0.2
 --- !u!64 &5384691471464282727
 MeshCollider:
   m_ObjectHideFlags: 0
@@ -63,7 +44,7 @@ MeshCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 4
-  m_Convex: 0
+  m_Convex: 1
   m_CookingOptions: -1
   m_Mesh: {fileID: 3099752009383487492, guid: 2a249d6eb86fa2f449295142ca077d04, type: 3}
 --- !u!64 &6353848344517285208
@@ -77,7 +58,7 @@ MeshCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 4
-  m_Convex: 0
+  m_Convex: 1
   m_CookingOptions: -1
   m_Mesh: {fileID: 3542263065552083248, guid: ed660eec3781ab04fadd0bccb2ad3e56, type: 3}
 --- !u!64 &2533335109717936092
@@ -91,7 +72,7 @@ MeshCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 4
-  m_Convex: 0
+  m_Convex: 1
   m_CookingOptions: -1
   m_Mesh: {fileID: 8201244479403508406, guid: a3f0fa7f365fc954297d41a6b1e9044e, type: 3}
 --- !u!1001 &5939711318553330521

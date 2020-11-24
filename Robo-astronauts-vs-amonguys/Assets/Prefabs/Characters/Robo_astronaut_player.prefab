@@ -195,19 +195,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 31170019ee7947345bab8ce651930458, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 10
-  turn_speed: 120
+  normal_speed: 12
+  shooting_speed: 6
+  move_turn_speed: 100
+  shoot_turn_speed: 90
   max_health: 50
   health_bar: {fileID: 5772814718757601710}
-  CM_movement: {fileID: 0}
-  CM_shooting: {fileID: 0}
   damage_amount: 10
   shoot_distance: 100
-  time_btw_shoot: 0.2
+  time_shoot_again: 0.1
   target_layer:
     serializedVersion: 2
     m_Bits: 33792
   flash_particles: {fileID: 106619522181798687}
+  CM_movement: {fileID: 0}
+  CM_shooting: {fileID: 0}
   audio_src_shoot: {fileID: 574015590}
   audio_src_effects: {fileID: 574015591}
   damage_audio: {fileID: 8300000, guid: 6ece6da7a55474246ab7a10b2b452b23, type: 3}
@@ -231,8 +233,8 @@ CharacterController:
   serializedVersion: 2
   m_Height: 2.5
   m_Radius: 0.8
-  m_SlopeLimit: 35
-  m_StepOffset: 0.3
+  m_SlopeLimit: 50
+  m_StepOffset: 0.5
   m_SkinWidth: 0.08
   m_MinMoveDistance: 0.001
   m_Center: {x: 0, y: 0.29, z: 0}

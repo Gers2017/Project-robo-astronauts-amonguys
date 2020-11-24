@@ -7,6 +7,11 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 2224979367571998175, guid: 294f0c19ca01af5429e35c53ad0e754a,
+        type: 3}
+      propertyPath: m_Convex
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 3221049871506694202, guid: 294f0c19ca01af5429e35c53ad0e754a,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -122,6 +127,11 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.y
       value: -344.999
       objectReference: {fileID: 0}
+    - target: {fileID: 4935695730730749208, guid: 294f0c19ca01af5429e35c53ad0e754a,
+        type: 3}
+      propertyPath: m_Convex
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 6241304572394594884, guid: 294f0c19ca01af5429e35c53ad0e754a,
         type: 3}
       propertyPath: m_Name
@@ -136,6 +146,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalPosition.x
       value: -2.25
+      objectReference: {fileID: 0}
+    - target: {fileID: 7518052611040557448, guid: 294f0c19ca01af5429e35c53ad0e754a,
+        type: 3}
+      propertyPath: m_Convex
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7770022748513643009, guid: 294f0c19ca01af5429e35c53ad0e754a,
         type: 3}

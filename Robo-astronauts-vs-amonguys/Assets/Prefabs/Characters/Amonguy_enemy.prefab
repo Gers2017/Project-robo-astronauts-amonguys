@@ -51,12 +51,15 @@ MonoBehaviour:
   - {fileID: 11400000, guid: bade24adcf3ed1b43b4428f2bfe4beaf, type: 2}
   - {fileID: 11400000, guid: eb909f4b7f6103f4aa0696aa1e7ca26b, type: 2}
   - {fileID: 11400000, guid: 1b57bd7edcdd3344291566bca722f589, type: 2}
+  target: {fileID: 0}
   animator: {fileID: 1166734247029203783}
   spawn_audios:
   - {fileID: 8300000, guid: e88ea5b30c33da34c963d462a4e68284, type: 3}
   - {fileID: 8300000, guid: 9763a7f05a59d39468a9f690592c4ce5, type: 3}
+  damage_audio: {fileID: 8300000, guid: b30bb7e4488d61c48bcd685f8d085a89, type: 3}
   faint_audio: {fileID: 8300000, guid: 16a34ef4993926943a5f1dd96f1e8f6a, type: 3}
   amonguy_renderer: {fileID: 1986897433595432190}
+  angle_of_view: 45
 --- !u!195 &7700553510366609303
 NavMeshAgent:
   m_ObjectHideFlags: 0

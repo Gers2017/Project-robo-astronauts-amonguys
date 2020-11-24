@@ -25,6 +25,7 @@ namespace Amonguys
 
         [Header("Audio clips")]
         [SerializeField] AudioClip[] spawn_audios;
+        [SerializeField] AudioClip damage_audio;
         [SerializeField] AudioClip faint_audio;
 
         [Header("Meshes")]
@@ -58,7 +59,6 @@ namespace Amonguys
         public void OnActivation()
         {
             SetUpAmonguy();
-            ModifyAudioSource();
             animator.SetBool(is_dead, false);
             agent.isStopped = false;
             amonguys_collider.enabled = true;
@@ -79,13 +79,16 @@ namespace Amonguys
 
             InvokeRepeating("SearchTarget", 0f, stats.GetSearchTime());
             animator.SetFloat("m_speed", stats.GetAnimationSpeed());
+
+            int audio_index = Random.Range(0, spawn_audios.Length);
+            PlaySound(spawn_audios[audio_index]);
         }
 
-        private void ModifyAudioSource()
+        public void PlaySound(AudioClip clip)
         {
-            audio_source.pitch = Random.Range(0.7f, 1f);
-            int audio_index = Random.Range(0, spawn_audios.Length);
-            audio_source.PlayOneShot(spawn_audios[audio_index]);
+
+            audio_source.pitch = Random.Range(0.7f, 1.3f);
+            audio_source.PlayOneShot(clip);
         }
 
         private void SetColor(Color color)
@@ -119,6 +122,13 @@ namespace Amonguys
                     scale.z += amount;
                     scale.x += amount;
                     transform.localScale = scale;
+
+                    var new_pos = transform.position;
+                    if(new_pos.y > -0.5f)
+                    {
+                        new_pos.y -= amount;
+                        transform.position = new_pos;
+                    }
                 }
             }
         }
@@ -136,6 +146,8 @@ namespace Amonguys
 
         void ExecuteAttack()
         {
+            bool is_in_range = GetDotProductTarget();;
+
             var position = transform.position + transform.forward * 2f + Vector3.up * 1f;
             var size = Vector3.one * attack_distance / 2;
             var colliders = Physics.OverlapBox(position, size, Quaternion.identity, target_layer);
@@ -145,7 +157,7 @@ namespace Amonguys
             {
                 IDamagable player;
                 bool is_player = collider.TryGetComponent<IDamagable>(out player);
-                if(is_player)
+                if(is_player && is_in_range)
                 {
                     player.TakeDamage(damage_amount);
                 }
@@ -157,10 +169,34 @@ namespace Amonguys
         {
             var position = transform.position + transform.forward * 2f + Vector3.up * 1f;
             var size = Vector3.one * attack_distance / 2;
-            Gizmos.color = new Color(1,0,0,0.5f);;
-            Gizmos.DrawCube(position,size);
+
+            if(target != null)
+            {
+                bool is_in_range = GetDotProductTarget();
+                Gizmos.color = is_in_range ? new Color(1, 0, 0, 0.5f) : new Color(0, 0, 0, 0.5f);
+            }
+            else
+            {
+                Gizmos.color = new Color(1,0,0,0.5f);
+            }
+            
+            Gizmos.DrawCube(position, size);
+
+            Gizmos.color = new Color(0.7f, 0.7f, 0f, 0.8f);
+            Gizmos.DrawWireSphere(transform.position + Vector3.up * 1f, attack_distance);
         }
+        
         #endif
+        private bool GetDotProductTarget()
+        {
+            var diff = target.position - transform.position;
+            var x = new Vector2(diff.x, diff.z);
+            var y = Vector2.up * transform.forward.z;
+            var dot = Vector2.Dot(x, y);
+            bool is_in_range = dot > 0.5f;
+            return is_in_range;
+        }
+
         public void TakeDamage(int amount)
         {
             if(!is_alive) return;
@@ -168,6 +204,8 @@ namespace Amonguys
             health -= amount;
 
             //play damage sound
+            if(!audio_source.isPlaying)
+                PlaySound(damage_audio);
 
             if(health <= 0)
             {
@@ -186,7 +224,7 @@ namespace Amonguys
             //Set the parameters to the animator
             animator.SetBool(is_dead, true);
             float faint_time = animator.GetCurrentAnimatorClipInfo(0)[0].clip.length;
-            audio_source.PlayOneShot(faint_audio);
+            PlaySound(faint_audio);
             StartCoroutine(OnAnimationEnd(faint_time + faint_audio.length * 0.5f));
         }
 
