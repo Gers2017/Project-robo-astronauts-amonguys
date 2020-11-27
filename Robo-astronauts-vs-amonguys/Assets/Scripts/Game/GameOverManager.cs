@@ -4,25 +4,37 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public class GameOverManager : MonoBehaviour
+namespace GameManagement
 {
-    public float timeReloadScene = 2f;
 
-    void Start()
+    public class GameOverManager : MonoBehaviour
     {
-        PlayerController.OnPlayerDie += HandlePlayerDies;
-    }
+        public float timeReloadScene = 2f;
 
-    private void HandlePlayerDies(PlayerController player)
-    {
-        PlayerController.OnPlayerDie -= HandlePlayerDies;
-        StartCoroutine(ReloadScene());        
-    }
+        void Start()
+        {
+            PlayerController.OnPlayerDie += HandlePlayerDies;
+        }
 
-    IEnumerator ReloadScene()
-    {
-        yield return new WaitForSeconds(timeReloadScene);
-        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);    
-    }
+        private void HandlePlayerDies(PlayerController player)
+        {
+            PlayerController.OnPlayerDie -= HandlePlayerDies;
+            ReloadCurrentScene();
+        }
 
+        public void LoadFirstScene()
+        {
+            StartCoroutine(ReloadSceneCoroutine(0));      
+        }
+        public void ReloadCurrentScene()
+        {
+            StartCoroutine(ReloadSceneCoroutine(SceneManager.GetActiveScene().buildIndex));      
+        }
+
+        IEnumerator ReloadSceneCoroutine(int index)
+        {
+            yield return new WaitForSeconds(timeReloadScene);
+            SceneManager.LoadScene(index);
+        }
+    }
 }

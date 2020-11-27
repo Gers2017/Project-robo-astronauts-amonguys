@@ -65,14 +65,17 @@ public class PlayerController : MonoBehaviour, IDamagable
     [SerializeField] SkinnedMeshRenderer robi_renderer;
     [SerializeField] Light robi_light;
     [SerializeField] Material normal_mat, danger_mat;
-    [SerializeField] Color normal_light_color = Color.green, danger_light_color = Color.red;
 
+    Color normal_light_color;
+    [SerializeField] Color danger_light_color = Color.red;
+    private RobiSkin robiSkin;
     void Awake()
     {
         character = GetComponent<CharacterController>();
         hit_particles_pooler = GetComponent<ObjectPooler>();
         impulse_source = GetComponent<CinemachineImpulseSource>();
         mouse_sensitivity = GameSettings.GetMouseSensitivity();
+        robiSkin = GetComponent<RobiSkin>();
     }
 
     void Start()
@@ -81,6 +84,7 @@ public class PlayerController : MonoBehaviour, IDamagable
         SetupAnimator();
         SetupHealth();
         GetMainCamera();
+        SetUpLight();
     }
 
     private void SetUpSpeed()
@@ -105,6 +109,12 @@ public class PlayerController : MonoBehaviour, IDamagable
         Health = max_health;
         health_bar.SetStartValue(max_health);
         OnHpPercentage += health_bar.SetBarValue;
+    }
+
+    private void SetUpLight()
+    {
+        normal_light_color = robiSkin.currentSkin.eyesColor;
+        robi_light.color = robiSkin.currentSkin.eyesColor;
     }
 
     void Update()
@@ -193,6 +203,7 @@ public class PlayerController : MonoBehaviour, IDamagable
             }
 
             flash_particles.Play();
+            audio_src_shoot.pitch = UnityEngine.Random.Range(0.8f,1.2f);
             audio_src_shoot.PlayOneShot(laser_audio);
             GenerateImpulse();
         }

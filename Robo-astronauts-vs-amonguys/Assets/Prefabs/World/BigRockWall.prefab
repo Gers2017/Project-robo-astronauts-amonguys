@@ -14,7 +14,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 4294967295
   m_IsActive: 1
 --- !u!4 &6342865797980582778
 Transform:
@@ -49,6 +49,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_IsActive
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1062803152507410147, guid: b890de82445892549beea5b53082451c,
+        type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 4294967295
       objectReference: {fileID: 0}
     - target: {fileID: 3767301232194693045, guid: b890de82445892549beea5b53082451c,
         type: 3}
@@ -124,6 +129,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: BigRocks (1)
+      objectReference: {fileID: 0}
+    - target: {fileID: 1062803152507410147, guid: b890de82445892549beea5b53082451c,
+        type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 4294967295
       objectReference: {fileID: 0}
     - target: {fileID: 3767301232194693045, guid: b890de82445892549beea5b53082451c,
         type: 3}
@@ -254,6 +264,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: BigRocks_2
+      objectReference: {fileID: 0}
+    - target: {fileID: 8885422263925519394, guid: 06f71e053a190c6469244e5768dbb8a8,
+        type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 4294967295
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 06f71e053a190c6469244e5768dbb8a8, type: 3}

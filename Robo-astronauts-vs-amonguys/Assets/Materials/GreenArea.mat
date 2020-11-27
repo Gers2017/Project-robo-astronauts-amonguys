@@ -9,8 +9,8 @@ Material:
   m_PrefabAsset: {fileID: 0}
   m_Name: GreenArea
   m_Shader: {fileID: 46, guid: 0000000000000000f000000000000000, type: 0}
-  m_ShaderKeywords: _ALPHABLEND_ON _EMISSION
-  m_LightmapFlags: 2
+  m_ShaderKeywords: _ALPHABLEND_ON
+  m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 0
   m_CustomRenderQueue: 3000
@@ -74,5 +74,5 @@ Material:
     - _UVSec: 0
     - _ZWrite: 0
     m_Colors:
-    - _Color: {r: 0.3794055, g: 0.9245283, b: 0.41523454, a: 0.5372549}
+    - _Color: {r: 0.24705881, g: 1, b: 0.6985323, a: 0.4627451}
     - _EmissionColor: {r: 0.4481132, g: 1, b: 0.71116203, a: 1}
