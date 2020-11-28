@@ -10,7 +10,7 @@ namespace GameManagement
     public class PauseManager : MonoBehaviour
     {
         public bool isPaused;
-        public static Action<bool> OnGamePause;
+        public static event Action<bool> OnGamePause;
         public UnityEvent OnPauseEvent;
         public UnityEvent OnUnPauseEvent;
 

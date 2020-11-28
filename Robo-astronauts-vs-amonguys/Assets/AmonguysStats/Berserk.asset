@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Berserk
   m_EditorClassIdentifier: 
   amonguy_color: {r: 0.8584906, g: 0.08503916, b: 0.13237044, a: 1}
-  damage: 20
+  damage: 15
   speed: 5
   health: 100
   min_anim_speed: 1

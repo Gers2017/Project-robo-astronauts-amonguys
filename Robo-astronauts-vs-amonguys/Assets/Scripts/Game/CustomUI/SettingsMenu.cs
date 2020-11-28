@@ -34,5 +34,10 @@ namespace CustomUI
             GameSettings.SetPostProcessingWeight(value);
         }
 
+        public void OnQualityChange(int index)
+        {
+            QualitySettings.SetQualityLevel(index);
+        }
+
     }
 }

@@ -1,39 +1,49 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 using ObjectPooling;
+using UnityEditor;
 
 namespace Amonguys
 {
     public class Amonguys : MonoBehaviour, IDamagable, IPoolObject
     {
-        [SerializeField] AmonguysStats[] amonguys_stats;
-        int start_health = 60;
-        int health;
-        int damage_amount = 10;
-        float attack_distance = 3f;
-        bool is_alive = true;
-        Transform target;
-        int velocity, is_dead, attack;
-        NavMeshAgent agent;
-        Collider amonguys_collider;
-        AudioSource audio_source;
-        LayerMask target_layer;
-        Vector3 start_scale = Vector3.one;
-        [SerializeField] Animator animator;
+        public static event Action OnAnyAmonguyDie;
+        [SerializeField] protected AmonguysStats[] amonguys_stats;
+        [SerializeField] float angleOfView = 45f;
+        protected int start_health = 60;
+        protected int health;
+        protected int damage_amount = 10;
+        [SerializeField] protected Transform attack_point;
+        [SerializeField] protected Vector3 attack_size = Vector3.one;
+        [SerializeField] protected float attack_distance = 3f;
+        protected bool is_alive = true;
+
+        protected Transform target;
+        protected float distance_to_target;
+        protected int velocity, is_dead, attack;
+        protected NavMeshAgent agent;
+        protected Collider amonguys_collider;
+        protected AudioSource audio_source;
+        protected LayerMask target_layer;
+        protected Vector3 start_scale = Vector3.one;
+        [SerializeField] protected Animator animator;
 
         [Header("Audio clips")]
-        [SerializeField] AudioClip[] spawn_audios;
-        [SerializeField] AudioClip damage_audio;
-        [SerializeField] AudioClip faint_audio;
+        [SerializeField] protected AudioClip[] spawn_audios;
+        [SerializeField] protected AudioClip damage_audio;
+        [SerializeField] protected AudioClip faint_audio;
+        [SerializeField] float min_pitch = 0.7f;
+        [SerializeField] float max_pitch = 1.2f;
 
         [Header("Meshes")]
-        [SerializeField] SkinnedMeshRenderer amonguy_renderer;
+        [SerializeField] protected SkinnedMeshRenderer amonguy_renderer;
 
 
         //Get gameObject components in Awake
-        void Awake()
+        protected void Awake()
         {
             agent = GetComponent<NavMeshAgent>();
             amonguys_collider = GetComponent<Collider>();
@@ -41,7 +51,7 @@ namespace Amonguys
             agent.stoppingDistance = attack_distance;
         }
 
-        void Start()
+        protected void Start()
         {
             PlayerController player = FindObjectOfType<PlayerController>();
 
@@ -56,7 +66,7 @@ namespace Amonguys
             target_layer = LayerMask.GetMask("Player");
         }
 
-        public void OnActivation()
+        public virtual void OnActivation()
         {
             SetUpAmonguy();
             animator.SetBool(is_dead, false);
@@ -66,9 +76,9 @@ namespace Amonguys
             transform.localScale = start_scale;
         }
 
-        private void SetUpAmonguy()
+        protected void SetUpAmonguy()
         {
-            var stats = amonguys_stats[Random.Range(0, amonguys_stats.Length)];
+            var stats = amonguys_stats[UnityEngine.Random.Range(0, amonguys_stats.Length)];
 
             start_health = stats.health;
             health = start_health;
@@ -80,23 +90,23 @@ namespace Amonguys
             InvokeRepeating("SearchTarget", 0f, stats.GetSearchTime());
             animator.SetFloat("m_speed", stats.GetAnimationSpeed());
 
-            int audio_index = Random.Range(0, spawn_audios.Length);
+            int audio_index = UnityEngine.Random.Range(0, spawn_audios.Length);
             PlaySound(spawn_audios[audio_index]);
         }
 
         public void PlaySound(AudioClip clip)
         {
 
-            audio_source.pitch = Random.Range(0.7f, 1.3f);
+            audio_source.pitch = UnityEngine.Random.Range(min_pitch, max_pitch);
             audio_source.PlayOneShot(clip);
         }
 
-        private void SetColor(Color color)
+        protected void SetColor(Color color)
         {
             amonguy_renderer.materials[0].SetColor("_Color", color);
         }
         
-        private void SearchTarget()
+        protected void SearchTarget()
         {
             if (target != null && is_alive)
             {
@@ -104,97 +114,127 @@ namespace Amonguys
             }
         }
 
-        void LateUpdate()
+        protected virtual void LateUpdate()
         {
             if(is_alive)
             {
-                animator.SetFloat(velocity, agent.velocity.magnitude);
-                CheckDistance();
+                OnAmonguyAlive();
             }
             else
             {
-                var scale = transform.localScale;
-                
-                if(scale.y > 0.1f)
-                {
-                    float amount = Time.deltaTime * 0.5f;
-                    scale.y -= amount;
-                    scale.z += amount;
-                    scale.x += amount;
-                    transform.localScale = scale;
-
-                    var new_pos = transform.position;
-                    if(new_pos.y > -0.5f)
-                    {
-                        new_pos.y -= amount;
-                        transform.position = new_pos;
-                    }
-                }
+                ScaleToDeath();
             }
         }
 
-        void CheckDistance()
+        protected virtual void OnAmonguyAlive()
         {
-            if(target == null) return;
-            float distance = Vector3.Distance(transform.position, target.position);
-            if(distance <= attack_distance)
+            SetDistanceToTarget();
+            SetAnimatorVelocity();
+
+            if(distance_to_target <= attack_distance)
             {
                 ExecuteAttack();
                 animator.SetTrigger(attack);
             }
         }
 
-        void ExecuteAttack()
+        protected void SetAnimatorVelocity()
         {
-            bool is_in_range = GetDotProductTarget();;
+            animator.SetFloat(velocity, agent.velocity.magnitude);
+        }
 
-            var position = transform.position + transform.forward * 2f + Vector3.up * 1f;
-            var size = Vector3.one * attack_distance / 2;
-            var colliders = Physics.OverlapBox(position, size, Quaternion.identity, target_layer);
-            if(colliders == null) return;
+        protected void ScaleToDeath()
+        {
+            var scale = transform.localScale;
+
+            if (scale.y > 0.1f)
+            {
+                float amount = Time.deltaTime * 0.5f;
+                scale.y -= amount;
+                scale.z += amount;
+                scale.x += amount;
+                transform.localScale = scale;
+
+                var new_pos = transform.position;
+                if (new_pos.y > -0.5f)
+                {
+                    new_pos.y -= amount;
+                    transform.position = new_pos;
+                }
+            }
+        }
+
+        protected void SetDistanceToTarget()
+        {
+            if(target == null) return;
+            distance_to_target = Vector3.Distance(transform.position, target.position);
+        }
+
+        protected virtual void ExecuteAttack()
+        {
+            float target_angle = GetTargetAngle();
+            bool target_is_visible = IsTargetVisible(target_angle);
+
+            if(!target_is_visible) return;
+
+            var colliders = Physics.OverlapBox(attack_point.position, attack_size, Quaternion.identity, target_layer);
+            if(colliders == null || colliders.Length <= 0) return;
 
             foreach (var collider in colliders)
             {
                 IDamagable player;
                 bool is_player = collider.TryGetComponent<IDamagable>(out player);
-                if(is_player && is_in_range)
+                if(is_player)
                 {
                     player.TakeDamage(damage_amount);
                 }
             }
         }
 
+
         #if UNITY_EDITOR
-        private void OnDrawGizmos()
+        protected void OnDrawGizmosSelected()
         {
-            var position = transform.position + transform.forward * 2f + Vector3.up * 1f;
-            var size = Vector3.one * attack_distance / 2;
-
-            if(target != null)
-            {
-                bool is_in_range = GetDotProductTarget();
-                Gizmos.color = is_in_range ? new Color(1, 0, 0, 0.5f) : new Color(0, 0, 0, 0.5f);
-            }
-            else
-            {
-                Gizmos.color = new Color(1,0,0,0.5f);
-            }
-            
-            Gizmos.DrawCube(position, size);
-
+            //Attack area
             Gizmos.color = new Color(0.7f, 0.7f, 0f, 0.8f);
-            Gizmos.DrawWireSphere(transform.position + Vector3.up * 1f, attack_distance);
+            Gizmos.DrawWireSphere(transform.position + Vector3.up, attack_distance);
+
+            if(attack_point != null)
+            {
+                Gizmos.color = new Color(1, 0, 0, 0.5f);
+                Gizmos.DrawCube(attack_point.position, attack_size);
+            }
+
+            if(target == null) return;
+
+            Vector3 dir = target.position - transform.position;
+            dir.y = 0;
+            dir.Normalize();
+            float target_angle = GetTargetAngle();
+            Color c = IsTargetVisible(target_angle) ? Color.green : Color.magenta;
+            Gizmos.color = c;
+            Handles.color = c;
+            Gizmos.DrawLine(transform.position, target.position);
+            Handles.DrawWireArc(transform.position, Vector2.up, dir, target_angle, 2f);
+            Handles.DrawWireArc(transform.position, Vector2.up, dir, -target_angle, 2f);
         }
         
         #endif
-        private bool GetDotProductTarget()
+
+        protected float GetTargetAngle()
         {
-            var diff = target.position - transform.position;
-            var x = new Vector2(diff.x, diff.z);
-            var y = Vector2.up * transform.forward.z;
-            var dot = Vector2.Dot(x, y);
-            bool is_in_range = dot > 0.5f;
-            return is_in_range;
+            Vector3 lookDir = transform.forward;
+            Vector3 diff = (target.position - transform.position);
+            Vector3 dirToPoint = new Vector3(diff.x, 0f, diff.z).normalized;
+
+            float dot = Vector3.Dot(lookDir, dirToPoint);
+            float angle = Mathf.Acos(dot) * Mathf.Rad2Deg;
+            return angle;
+        }
+
+        protected bool IsTargetVisible(float angle)
+        {
+            return angle <= angleOfView;
         }
 
         public void TakeDamage(int amount)
@@ -213,8 +253,9 @@ namespace Amonguys
             }
         }
 
-        private void KillAmonguy()
+        protected void KillAmonguy()
         {
+            OnAnyAmonguyDie?.Invoke();
             //Stop the agent and disable the collider
             is_alive = false;
             agent.isStopped = true;
@@ -233,7 +274,7 @@ namespace Amonguys
             yield return new WaitForSeconds(t);
             ReturnToPool();
         }
-        void ReturnToPool()
+        protected void ReturnToPool()
         {
             gameObject.SetActive(false);
         }
