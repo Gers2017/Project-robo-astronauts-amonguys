@@ -14,7 +14,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 4294967295
   m_IsActive: 1
 --- !u!4 &1867504980421564358
 Transform:
@@ -48,6 +48,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: RockBlockStructure_2 Variant
+      objectReference: {fileID: 0}
+    - target: {fileID: 2780144175009084521, guid: 2d2e5b65788f8c344bbeef2d2e1ebf48,
+        type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 4294967295
       objectReference: {fileID: 0}
     - target: {fileID: 5112055637292862908, guid: 2d2e5b65788f8c344bbeef2d2e1ebf48,
         type: 3}
@@ -133,6 +138,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: BigRocks
+      objectReference: {fileID: 0}
+    - target: {fileID: 1062803152507410147, guid: b890de82445892549beea5b53082451c,
+        type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 4294967295
       objectReference: {fileID: 0}
     - target: {fileID: 3767301232194693045, guid: b890de82445892549beea5b53082451c,
         type: 3}

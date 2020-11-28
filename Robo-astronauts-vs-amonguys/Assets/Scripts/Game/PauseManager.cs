@@ -18,19 +18,27 @@ namespace GameManagement
         {
             if(Input.GetButtonDown("Pause"))
             {
-                Pause();
+                if(isPaused)
+                    UnPause();
+                else
+                    Pause();
             }
         }
 
         public void Pause()
         {
             isPaused = !isPaused;
-            Time.timeScale = isPaused ? 0f : 1f;
+            Time.timeScale = 0f;
             OnGamePause?.Invoke(isPaused);
-            if(isPaused)
-                OnPauseEvent.Invoke();
-            else
-                OnUnPauseEvent.Invoke();
+            OnPauseEvent.Invoke();
+        }
+
+        public void UnPause()
+        {
+            isPaused = !isPaused;
+            Time.timeScale = 1f;
+            OnGamePause?.Invoke(isPaused);
+            OnUnPauseEvent.Invoke();
         }
 
     }

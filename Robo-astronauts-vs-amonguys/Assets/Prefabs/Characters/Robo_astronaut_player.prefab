@@ -153,6 +153,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7554348755380529371}
   - component: {fileID: 7554348755380529373}
+  - component: {fileID: 7618262705559099750}
   - component: {fileID: 7554348755380529372}
   - component: {fileID: 118307868}
   - component: {fileID: 574015590}
@@ -218,8 +219,21 @@ MonoBehaviour:
   robi_light: {fileID: 6675205943378220486}
   normal_mat: {fileID: 2100000, guid: 54a9b794771330d41865df4303220e36, type: 2}
   danger_mat: {fileID: 2100000, guid: 7a739c4e4f3a7e64daac697c3506e8cd, type: 2}
-  normal_light_color: {r: 0.39215687, g: 1, b: 0.78431374, a: 1}
   danger_light_color: {r: 1, g: 0.25943398, b: 0.3045445, a: 1}
+--- !u!114 &7618262705559099750
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7554348755380529370}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7f85a48d1eeb8264f950ef9460c90e8d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  currentSkin: {fileID: 11400000, guid: d4c00bf639a68174c9daba1e274b3fd4, type: 2}
+  robiMeshRenderer: {fileID: 2853058740001079748}
 --- !u!143 &7554348755380529372
 CharacterController:
   m_ObjectHideFlags: 0
@@ -500,7 +514,7 @@ PrefabInstance:
     - target: {fileID: 7010138218425643674, guid: bc643dbbaf72c244dbef547c761e0683,
         type: 3}
       propertyPath: m_Name
-      value: ROBI_LIGHT
+      value: Robi_light
       objectReference: {fileID: 0}
     - target: {fileID: 7010138218425643675, guid: bc643dbbaf72c244dbef547c761e0683,
         type: 3}

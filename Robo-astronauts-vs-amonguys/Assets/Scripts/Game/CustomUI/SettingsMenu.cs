@@ -2,40 +2,37 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-using UnityEngine.Audio;
 using GameManagement;
 
 namespace CustomUI
 {
     public class SettingsMenu : MonoBehaviour
     {
-        [SerializeField] AudioMixer audio_mixer;
         [SerializeField] Slider volume_slider;
         [SerializeField] Slider mouse_slider;
-
+        [SerializeField] Slider postProcessing_slider;
 
         void OnEnable()
         {
-            float volume = GameSettings.GetMasterVolume();
-            SetAudioMixerVolume(volume);
-            volume_slider.value = volume;
+            volume_slider.value = GameSettings.GetMasterVolume();
             mouse_slider.value = GameSettings.GetMouseSensitivity();
+            postProcessing_slider.value = GameSettings.GetPostProcessingWeight();
         }
 
         public void OnVolumeChange(float value)
         {
-            SetAudioMixerVolume(value);
             GameSettings.SetMasterVolume(value);
-        }
-
-        private void SetAudioMixerVolume(float value)
-        {
-            audio_mixer.SetFloat("volume", value);
         }
 
         public void OnMouseSensitivityChange(float value)
         {
             GameSettings.SetMouseSensitivity(value);
         }
+
+        public void OnPPVolumeWightChange(float value)
+        {
+            GameSettings.SetPostProcessingWeight(value);
+        }
+
     }
 }
