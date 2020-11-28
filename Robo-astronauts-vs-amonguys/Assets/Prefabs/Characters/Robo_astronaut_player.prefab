@@ -234,6 +234,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   currentSkin: {fileID: 11400000, guid: d4c00bf639a68174c9daba1e274b3fd4, type: 2}
   robiMeshRenderer: {fileID: 2853058740001079748}
+  flashParticles: {fileID: 106619522181798687}
+  trailMaterial: {fileID: 2100000, guid: ba5bc3009c11a874bb49a498de1d31e8, type: 2}
 --- !u!143 &7554348755380529372
 CharacterController:
   m_ObjectHideFlags: 0
@@ -524,12 +526,12 @@ PrefabInstance:
     - target: {fileID: 7010138218425643675, guid: bc643dbbaf72c244dbef547c761e0683,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0
+      value: 0.0025
       objectReference: {fileID: 0}
     - target: {fileID: 7010138218425643675, guid: bc643dbbaf72c244dbef547c761e0683,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: 0.005
+      value: 0.01
       objectReference: {fileID: 0}
     - target: {fileID: 7010138218425643675, guid: bc643dbbaf72c244dbef547c761e0683,
         type: 3}

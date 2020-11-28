@@ -89,8 +89,8 @@ BoxCollider:
   m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 8, y: 5, z: 10}
-  m_Center: {x: 0, y: 2, z: 10}
+  m_Size: {x: 5.5, y: 5, z: 4.5}
+  m_Center: {x: 0, y: 5, z: 8}
 --- !u!114 &3377916120695883444
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -104,7 +104,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isShipEnabled: 0
-  sceneIndex: 0
+  sceneIndex: 2
   OnAreaEnter:
     m_PersistentCalls:
       m_Calls: []
